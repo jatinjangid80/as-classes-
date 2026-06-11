@@ -36,16 +36,32 @@ function AuthPage() {
 
   const signInWithGoogle = async () => {
     setLoading(true);
-    const { error } = await supabase.auth.signInWithOAuth({
+    const redirectTo = `${window.location.origin}/auth/callback`;
+    const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/dashboard`,
+        redirectTo,
+        queryParams: {
+          access_type: "offline",
+          prompt: "consent",
+        },
       },
     });
-    setLoading(false);
     if (error) {
-      toast.error(error.message);
+      setLoading(false);
+      const message =
+        error.message.includes("provider is not enabled")
+          ? "Google sign-in is not enabled yet. Enable the Google provider in Supabase (Authentication → Providers → Google) and add your Google OAuth Client ID and Secret."
+          : error.message;
+      toast.error(message);
+      return;
     }
+    if (data.url) {
+      window.location.href = data.url;
+      return;
+    }
+    setLoading(false);
+    toast.error("Could not start Google sign-in. Please try again.");
   };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

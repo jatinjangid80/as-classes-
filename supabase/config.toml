@@ -1,1 +1,9 @@
 project_id = "rhlrtcgtnrdiiiraxolf"
+
+# Google OAuth — set credentials in Supabase Dashboard for hosted projects.
+# For local Supabase CLI, uncomment and add env vars to .env:
+#
+# [auth.external.google]
+# enabled = true
+# client_id = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID)"
+# secret = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET)"
